@@ -1,17 +1,17 @@
 # VeggieVault
 
-**VeggieVault** is a centralized bulk produce marketplace that connects local farmers directly with vendors, restaurants, and retailers.  
+**VeggieVault** is a centralized bulk produce marketplace that connects local farmers directly with vendors, restaurants and retailers.  
 Instead of small, unsustainable household deliveries, VeggieVault focuses on **large, wholesale orders**, helping farmers move more produce in fewer transactions and enabling vendors to stock up at competitive prices.
 
 ### How It Works
 1. **Farmers** list fresh produce in bulk with minimum order quantities (MOQs), prices, and availability.
 2. **Vendors** browse listings, compare offers, and place bulk orders for delivery or pickup.
-3. **VeggieVault** streamlines logistics, payments, and order tracking for a smoother farm-to-vendor supply chain.
+3. **VeggieVault** streamlines logistics, payments and order tracking for a smoother farm-to-vendor supply chain.
 
 ### Why VeggieVault?
 - **Efficient** – Fewer deliveries, lower costs, better margins.
 - **Sustainable** – Supports local farming communities.
-- **Scalable** – Works for fresh produce, grains, dairy, and more.
+- **Scalable** – Works for fresh produce, grains, dairy and more.
 
 
 
@@ -19,11 +19,11 @@ Instead of small, unsustainable household deliveries, VeggieVault focuses on **l
 
 ### 1. Farmers (Suppliers)
 - List produce in bulk (minimum order quantities).
-- Update stock, price, and harvest dates.
+- Update stock, price and harvest dates.
 
 ### 2. Vendors (Main Customers)
 - Buy in large quantities at wholesale rates.
-- Manage invoices, payments, and delivery schedules.
+- Manage invoices, payments and delivery schedules.
 
 ### 3. Admin (You / Business Owner)
 - Verify farmers.
