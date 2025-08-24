@@ -12,10 +12,16 @@ export default function Products() {
 
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [cart, setCart] = useState([]);
 
-  const filteredProducts = allProducts.filter(p =>
+  const filteredProducts = allProducts.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleAddToCart = (product) => {
+    setCart((prev) => [...prev, product]);
+    console.log("Cart Updated:", [...cart, product]); // Test log
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,7 +36,7 @@ export default function Products() {
           className="w-full border border-gray-300 rounded-xl p-3 mb-8"
         />
         <div className="grid md:grid-cols-3 gap-6">
-          {filteredProducts.map(product => (
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -43,6 +49,7 @@ export default function Products() {
       <ProductModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart} // Pass to modal
       />
     </div>
   );
