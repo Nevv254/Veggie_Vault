@@ -1,15 +1,27 @@
-export default function Navbar() {
+import { ShoppingCart } from "lucide-react";
+
+export default function Navbar({ cartCount, onCartClick }) {
   return (
-    <nav className="flex justify-between items-center p-6 bg-green-700 text-white">
-      <h1 className="text-2xl font-bold">VeggieVault</h1>
-      <ul className="hidden md:flex space-x-8">
-        <li><a href="#" className="hover:text-green-300">Home</a></li>
-        <li><a href="#" className="hover:text-green-300">Products</a></li>
-        <li><a href="#" className="hover:text-green-300">How It Works</a></li>
-      </ul>
-      <button className="bg-white text-green-700 px-4 py-2 rounded-xl font-semibold hover:bg-green-100">
-        Login / Register
-      </button>
+    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40">
+      <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
+        {/* Logo */}
+        <h1 className="text-2xl font-bold text-green-700">VeggieVault</h1>
+
+        {/* Floating Cart Icon */}
+        <div className="relative">
+          <button 
+            onClick={onCartClick} 
+            className="p-3 rounded-full bg-green-600 hover:bg-green-700 transition shadow-lg"
+          >
+            <ShoppingCart className="text-white w-6 h-6" />
+          </button>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+              {cartCount}
+            </span>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/NavBar";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
+import MiniCart from "../components/MiniCart";
 
 export default function Products() {
   const allProducts = [
@@ -13,20 +14,25 @@ export default function Products() {
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const filteredProducts = allProducts.filter((p) =>
+  const filteredProducts = allProducts.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleAddToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-    console.log("Cart Updated:", [...cart, product]); // Test log
+    setCart(prev => [...prev, product]);
+    setIsCartOpen(true); // Auto open cart when item is added
+  };
+
+  const handleRemoveFromCart = (id) => {
+    setCart(prev => prev.filter(item => item.id !== id));
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="max-w-6xl mx-auto py-10 px-6">
+      <Navbar cartCount={cart.length} onCartClick={() => setIsCartOpen(!isCartOpen)} />
+      <div className="max-w-6xl mx-auto py-24 px-6">
         <h1 className="text-3xl font-bold mb-6 text-center">Bulk Produce Listings</h1>
         <input
           type="text"
@@ -36,7 +42,7 @@ export default function Products() {
           className="w-full border border-gray-300 rounded-xl p-3 mb-8"
         />
         <div className="grid md:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
+          {filteredProducts.map(product => (
             <ProductCard
               key={product.id}
               product={product}
@@ -49,7 +55,14 @@ export default function Products() {
       <ProductModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        onAddToCart={handleAddToCart} // Pass to modal
+        onAddToCart={handleAddToCart}
+      />
+
+      <MiniCart 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        cart={cart} 
+        onRemove={handleRemoveFromCart}
       />
     </div>
   );
