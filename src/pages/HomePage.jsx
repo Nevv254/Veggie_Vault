@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navbar from "../components/NavBar";
+import apples from "../assets/apples-plastic-crate-harvesting-fruit-garden-autumn-red-apple-from-organic-farm_116317-20341.avif";
+import tomatoes from "../assets/tomatoes.webp";
+import maize from "../assets/maize.jpg";
+import eggs from "../assets/eggs.jpg";
 
 export default function HomePage() {
   return (
@@ -11,7 +15,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative bg-green-700 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-20">
-          {/* Left Content */}
+          { }
           <motion.div
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -34,7 +38,7 @@ export default function HomePage() {
 
           {/* Right Image */}
           <motion.img
-            src="src\assets\apples-plastic-crate-harvesting-fruit-garden-autumn-red-apple-from-organic-farm_116317-20341.avif"
+            src={apples}
             alt="Fresh Vegetables"
             className="rounded-2xl shadow-2xl mt-10 md:mt-0 md:w-1/2"
             initial={{ x: 50, opacity: 0 }}
@@ -49,9 +53,9 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-center mb-10">Trending Produce</h2>
         <div className="grid gap-8 md:grid-cols-3">
           {[
-            { id: 1, name: "Tomatoes", img: "src/assets/tomatoes.webp" },
-            { id: 2, name: "Maize", img: "src/assets/maize.jpg" },
-            { id: 3, name: "Eggs", img: "src/assets/eggs.jpg" },
+            { id: 1, name: "Tomatoes", img: tomatoes },
+            { id: 2, name: "Maize", img: maize },
+            { id: 3, name: "Eggs", img: eggs },
           ].map((item) => (
             <motion.div
               key={item.id}

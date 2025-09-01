@@ -3,12 +3,15 @@ import Navbar from "../components/NavBar";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
 import MiniCart from "../components/MiniCart";
+import tomatoes from "../assets/tomatoes.webp";
+import maize from "../assets/maize.jpg";
+import eggs from "../assets/eggs.jpg";
 
 export default function Products() {
   const allProducts = [
-    { id: 1, name: "Tomatoes", price: 50, minQty: 50, image: "src/assets/tomatoes.webp" },
-    { id: 2, name: "Maize", price: 35, minQty: 100, image: "src/assets/maize.jpg" },
-    { id: 3, name: "Eggs", price: 300, minQty: 200, image: "src/assets/eggs.jpg" },
+    { id: 1, name: "Tomatoes", price: 50, minQty: 50, image: tomatoes },
+    { id: 2, name: "Maize", price: 35, minQty: 100, image: maize },
+    { id: 3, name: "Eggs", price: 300, minQty: 200, image: eggs },
   ];
 
   const [search, setSearch] = useState("");
