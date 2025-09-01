@@ -84,7 +84,7 @@ export default function HomePage() {
           Join VeggieVault and start selling your produce directly to vendors.
         </p>
         <Link
-          to="/signup"
+          to="/register"
           className="bg-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-800 transition"
         >
           Get Started

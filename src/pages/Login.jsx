@@ -7,15 +7,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/"); // Redirect to homepage
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,9 +49,10 @@ export default function Login() {
           />
           <button
             type="submit"
-            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition"
+            disabled={loading}
+            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            {loading ? "Signing In..." : "Login"}
           </button>
         </form>
         <p className="text-center text-gray-500 mt-4">

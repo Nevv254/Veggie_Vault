@@ -7,15 +7,21 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/login"); // Redirect to login after successful registration
+      navigate("/"); // Redirect to home after successful registration
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,9 +49,10 @@ export default function Register() {
           />
           <button
             type="submit"
-            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition"
+            disabled={loading}
+            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Register
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
         <p className="text-center text-gray-500 mt-4">
