@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -16,8 +17,23 @@ export default function Login() {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect to homepage
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Get user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userRole = userDoc.data().role;
+        // Redirect to appropriate dashboard based on role
+        if (userRole === 'farmer') {
+          navigate("/farmer-dashboard");
+        } else {
+          navigate("/vendor-dashboard");
+        }
+      } else {
+        // Fallback to home if role not found
+        navigate("/");
+      }
     } catch (err) {
       setError(err.message);
     } finally {

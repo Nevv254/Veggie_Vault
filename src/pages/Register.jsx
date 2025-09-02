@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("vendor");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,8 +18,22 @@ export default function Register() {
     setError("");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect to home after successful registration
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save user role to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        role: role,
+        createdAt: new Date()
+      });
+
+      // Redirect to appropriate dashboard based on role
+      if (role === 'farmer') {
+        navigate("/farmer-dashboard");
+      } else {
+        navigate("/vendor-dashboard");
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -47,6 +63,48 @@ export default function Register() {
             className="w-full p-3 border rounded-lg"
             required
           />
+
+          {/* Role Selection */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">Choose Your Role</label>
+            <div className="space-y-2">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="farmer"
+                  checked={role === "farmer"}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="mr-3"
+                />
+                <div className="flex items-center">
+                  <span className="mr-2">🧑‍🌾</span>
+                  <div>
+                    <div className="font-medium">Farmer</div>
+                    <div className="text-sm text-gray-500">Add and manage your products</div>
+                  </div>
+                </div>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="vendor"
+                  checked={role === "vendor"}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="mr-3"
+                />
+                <div className="flex items-center">
+                  <span className="mr-2">🛒</span>
+                  <div>
+                    <div className="font-medium">Vendor</div>
+                    <div className="text-sm text-gray-500">Browse and purchase products</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
           <button
             type="submit"
             disabled={loading}
