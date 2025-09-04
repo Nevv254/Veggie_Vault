@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { serverTimestamp } from "firebase/firestore";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -19,17 +20,17 @@ export default function Register() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const uid = userCredential.user.uid;
 
       // Save user role to Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email,
-        role: role,
-        createdAt: new Date()
+      await setDoc(doc(db, 'users', uid), {
+        email,
+        role,
+        createdAt: serverTimestamp(),
       });
 
       // Redirect to appropriate dashboard based on role
-      if (role === 'farmer') {
+      if (role === "farmer") { 
         navigate("/farmer-dashboard");
       } else {
         navigate("/vendor-dashboard");
@@ -78,7 +79,7 @@ export default function Register() {
                   className="mr-3"
                 />
                 <div className="flex items-center">
-                  <span className="mr-2">🧑‍🌾</span>
+                  <span className="mr-2"></span>
                   <div>
                     <div className="font-medium">Farmer</div>
                     <div className="text-sm text-gray-500">Add and manage your products</div>
@@ -96,7 +97,7 @@ export default function Register() {
                   className="mr-3"
                 />
                 <div className="flex items-center">
-                  <span className="mr-2">🛒</span>
+                  <span className="mr-2"></span>
                   <div>
                     <div className="font-medium">Vendor</div>
                     <div className="text-sm text-gray-500">Browse and purchase products</div>

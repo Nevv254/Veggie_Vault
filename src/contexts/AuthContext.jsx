@@ -19,26 +19,63 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('Setting up auth state listener...');
+
+    // Fallback timeout to ensure loading doesn't hang forever
+    const fallbackTimeout = setTimeout(() => {
+      console.log('Fallback timeout reached, setting loading to false');
+      setLoading(false);
+    }, 10000); // 10 seconds fallback
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        // Get user role from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().role);
+      console.log('Auth state changed:', user ? 'User logged in' : 'No user');
+      try {
+        if (user) {
+          console.log('User authenticated:', user.email);
+          setUser(user);
+          // Get user role from Firestore with timeout
+          try {
+            console.log('Fetching user role from Firestore...');
+            const userDocPromise = getDoc(doc(db, 'users', user.uid));
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Firestore timeout')), 5000)
+            );
+
+            const userDoc = await Promise.race([userDocPromise, timeoutPromise]);
+            console.log('Firestore query completed');
+
+            if (userDoc.exists()) {
+              const role = userDoc.data().role;
+              console.log('User role found:', role);
+              setUserRole(role);
+            } else {
+              console.log('No user document found in Firestore');
+              setUserRole(null);
+            }
+          } catch (firestoreError) {
+            console.warn('Error fetching user role from Firestore:', firestoreError);
+            setUserRole(null);
+          }
         } else {
-          // New user without role - this shouldn't happen with our new registration flow
-          // but keeping as fallback
+          console.log('No authenticated user');
+          setUser(null);
           setUserRole(null);
         }
-      } else {
+      } catch (error) {
+        console.error('Error in auth state change:', error);
         setUser(null);
         setUserRole(null);
+      } finally {
+        console.log('Setting loading to false');
+        setLoading(false);
+        clearTimeout(fallbackTimeout); // Clear the fallback timeout
       }
-      setLoading(false);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      clearTimeout(fallbackTimeout);
+    };
   }, []);
 
   const logout = async () => {

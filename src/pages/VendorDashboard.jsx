@@ -115,7 +115,7 @@ export default function VendorDashboard() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto py-10 px-6">
+      <div className="max-w-7xl mx-auto pt-20 pb-10 px-6">
         <h1 className="text-3xl font-bold mb-8">Vendor Dashboard</h1>
 
         {/* Tab Navigation */}
