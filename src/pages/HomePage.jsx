@@ -77,6 +77,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section className="max-w-7xl mx-auto px-6 py-16 bg-white">
+        <h2 className="text-3xl font-bold text-center mb-10">How It Works</h2>
+        <div className="grid gap-8 md:grid-cols-3">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="text-center p-6 bg-gray-50 rounded-2xl"
+          >
+            <div className="text-6xl mb-4">🌱</div>
+            <h3 className="text-xl font-bold mb-2">For Farmers</h3>
+            <p className="text-gray-600">
+              List your produce, set prices and minimum quantities, and connect directly with vendors.
+            </p>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="text-center p-6 bg-gray-50 rounded-2xl"
+          >
+            <div className="text-6xl mb-4">🛒</div>
+            <h3 className="text-xl font-bold mb-2">For Vendors</h3>
+            <p className="text-gray-600">
+              Browse fresh produce, place bulk orders, and track your purchases in real-time.
+            </p>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="text-center p-6 bg-gray-50 rounded-2xl"
+          >
+            <div className="text-6xl mb-4">🚚</div>
+            <h3 className="text-xl font-bold mb-2">Delivery</h3>
+            <p className="text-gray-600">
+              Seamless delivery from farm to your doorstep, ensuring freshness and quality.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="bg-green-100 py-16 text-center">
         <h2 className="text-3xl font-bold mb-4">Are You a Farmer?</h2>
