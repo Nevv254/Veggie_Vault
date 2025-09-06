@@ -4,13 +4,83 @@ import { db } from "../firebase";
 import { collection, addDoc, getDocs, onSnapshot, query, where, updateDoc, doc } from "firebase/firestore";
 import { ShoppingCart, Package, Truck } from "lucide-react";
 import Navbar from "../components/NavBar";
+import apples from "../assets/apples.jpeg";
+import avocados from "../assets/Avocados.jpg";
+import tomatoes from "../assets/tomatoes.webp";
+import maize from "../assets/maize.jpg";
+import mangoes from "../assets/mangoes.jpg";
+import eggs from "../assets/eggs.jpg";
 
 export default function VendorDashboard() {
-  const { user, userRole } = useAuth();
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [activeTab, setActiveTab] = useState('products');
+   const { user, userRole } = useAuth();
+   const [products, setProducts] = useState([]);
+   const [cart, setCart] = useState([]);
+   const [orders, setOrders] = useState([]);
+   const [activeTab, setActiveTab] = useState('products');
+
+   // Sample products
+   const sampleProducts = [
+     {
+       id: 'sample-1',
+       name: 'Apples',
+       price: 50,
+       stock: 100,
+       minQty: 10,
+       image: apples,
+       farmerId: 'sample',
+       category: 'fruits'
+     },
+     {
+       id: 'sample-2',
+       name: 'Avocados',
+       price: 80,
+       stock: 50,
+       minQty: 5,
+       image: avocados,
+       farmerId: 'sample',
+       category: 'fruits'
+     },
+     {
+       id: 'sample-3',
+       name: 'Tomatoes',
+       price: 30,
+       stock: 200,
+       minQty: 20,
+       image: tomatoes,
+       farmerId: 'sample',
+       category: 'vegetables'
+     },
+     {
+       id: 'sample-4',
+       name: 'Maize',
+       price: 40,
+       stock: 150,
+       minQty: 25,
+       image: maize,
+       farmerId: 'sample',
+       category: 'grains'
+     },
+     {
+       id: 'sample-5',
+       name: 'Mangoes',
+       price: 60,
+       stock: 80,
+       minQty: 10,
+       image: mangoes,
+       farmerId: 'sample',
+       category: 'fruits'
+     },
+     {
+       id: 'sample-6',
+       name: 'Eggs',
+       price: 10,
+       stock: 500,
+       minQty: 50,
+       image: eggs,
+       farmerId: 'sample',
+       category: 'dairy'
+     }
+   ];
 
   useEffect(() => {
     if (user && userRole === 'vendor') {
@@ -22,7 +92,11 @@ export default function VendorDashboard() {
             id: doc.id,
             ...doc.data()
           }));
-          setProducts(allProducts);
+          if (allProducts.length === 0) {
+            setProducts(sampleProducts);
+          } else {
+            setProducts(allProducts);
+          }
         }
       );
 
@@ -161,9 +235,9 @@ export default function VendorDashboard() {
         </div>
 
         {/* Products Tab */}
-        {activeTab === 'products' && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
+         {activeTab === 'products' && (
+           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {products.map(product => (
               <div key={product.id} className="bg-white rounded-xl shadow-md p-6">
                 <img
                   src={product.image}
