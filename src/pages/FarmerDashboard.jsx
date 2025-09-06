@@ -8,6 +8,8 @@ import Navbar from "../components/NavBar";
 export default function FarmerDashboard() {
   const { user, userRole } = useAuth();
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [activeTab, setActiveTab] = useState('products');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ export default function FarmerDashboard() {
   useEffect(() => {
     if (user && userRole === 'farmer') {
       // Real-time listener for farmer's products
-      const unsubscribe = onSnapshot(
+      const unsubscribeProducts = onSnapshot(
         collection(db, 'products'),
         (snapshot) => {
           const farmerProducts = snapshot.docs
@@ -31,7 +33,22 @@ export default function FarmerDashboard() {
         }
       );
 
-      return unsubscribe;
+      // Fetch orders for farmer
+      const unsubscribeOrders = onSnapshot(
+        collection(db, 'orders'),
+        (snapshot) => {
+          const allOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          const farmerOrders = allOrders.filter(order =>
+            order.items && order.items.some(item => item.farmerId === user.uid)
+          );
+          setOrders(farmerOrders);
+        }
+      );
+
+      return () => {
+        unsubscribeProducts();
+        unsubscribeOrders();
+      };
     }
   }, [user, userRole]);
 
@@ -116,6 +133,30 @@ export default function FarmerDashboard() {
           >
             <Plus size={20} />
             Add Product
+          </button>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex mb-8 border-b">
+          <button
+            onClick={() => setActiveTab('products')}
+            className={`px-6 py-3 font-semibold ${
+              activeTab === 'products'
+                ? 'text-green-600 border-b-2 border-green-600'
+                : 'text-gray-600 hover:text-green-600'
+            }`}
+          >
+            My Products
+          </button>
+          <button
+            onClick={() => setActiveTab('orders')}
+            className={`px-6 py-3 font-semibold ${
+              activeTab === 'orders'
+                ? 'text-green-600 border-b-2 border-green-600'
+                : 'text-gray-600 hover:text-green-600'
+            }`}
+          >
+            Orders Received ({orders.length})
           </button>
         </div>
 
