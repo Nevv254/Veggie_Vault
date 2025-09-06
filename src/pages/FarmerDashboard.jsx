@@ -160,52 +160,105 @@ export default function FarmerDashboard() {
           </button>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {products.map(product => (
-            <div key={product.id} className="bg-white rounded-xl shadow-md p-6">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-32 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-              <p className="text-green-600 font-bold mb-2">Ksh {product.price}</p>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock: {product.stock}
-                </label>
-                <input
-                  type="number"
-                  value={product.stock}
-                  onChange={(e) => updateStock(product.id, e.target.value)}
-                  className="w-full border rounded-lg px-3 py-2"
-                  min="0"
+        {/* Products Tab */}
+        {activeTab === 'products' && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {products.map(product => (
+              <div key={product.id} className="bg-white rounded-xl shadow-md p-6">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-32 object-cover rounded-lg mb-4"
                 />
-              </div>
+                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                <p className="text-green-600 font-bold mb-2">Ksh {product.price}</p>
 
-              <p className="text-gray-600 text-sm mb-4">Min Order: {product.minQty}</p>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Stock: {product.stock}
+                  </label>
+                  <input
+                    type="number"
+                    value={product.stock}
+                    onChange={(e) => updateStock(product.id, e.target.value)}
+                    className="w-full border rounded-lg px-3 py-2"
+                    min="0"
+                  />
+                </div>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(product)}
-                  className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-1"
-                >
-                  <Edit size={16} />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-1"
-                >
-                  <Trash2 size={16} />
-                  Delete
-                </button>
+                <p className="text-gray-600 text-sm mb-4">Min Order: {product.minQty}</p>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-1"
+                  >
+                    <Edit size={16} />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-1"
+                  >
+                    <Trash2 size={16} />
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Orders Received</h2>
+
+            {orders.length === 0 ? (
+              <p className="text-gray-600 text-center py-8">No orders received yet</p>
+            ) : (
+              orders.map(order => (
+                <div key={order.id} className="bg-white rounded-xl shadow-md p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold">Order #{order.id.slice(-8)}</h3>
+                      <p className="text-gray-600">
+                        {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold">Ksh {order.totalAmount}</p>
+                      <span className={`px-3 py-1 rounded-full text-sm ${
+                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                        order.status === 'shipped' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    {order.items.filter(item => item.farmerId === user.uid).map((item, index) => (
+                      <div key={index} className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-10 h-10 object-cover rounded"
+                          />
+                          <span>{item.name} × {item.quantity}</span>
+                        </div>
+                        <span>Ksh {item.price * item.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
         {/* Add/Edit Product Modal */}
         {showAddForm && (

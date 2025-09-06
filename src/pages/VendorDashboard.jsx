@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
-import { collection, addDoc, getDocs, onSnapshot, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, updateDoc, doc } from "firebase/firestore";
 import { ShoppingCart, Package, Truck } from "lucide-react";
 import Navbar from "../components/NavBar";
 
@@ -88,6 +88,14 @@ export default function VendorDashboard() {
       };
 
       await addDoc(collection(db, 'orders'), orderData);
+
+      // Deduct stock for each item
+      for (const item of cart) {
+        const productRef = doc(db, 'products', item.id);
+        const newStock = item.stock - item.quantity;
+        await updateDoc(productRef, { stock: newStock });
+      }
+
       setCart([]);
       alert('Order placed successfully!');
     } catch (error) {
@@ -288,7 +296,10 @@ export default function VendorDashboard() {
                             alt={item.name}
                             className="w-10 h-10 object-cover rounded"
                           />
-                          <span>{item.name} × {item.quantity}</span>
+                          <div>
+                            <span>{item.name} × {item.quantity}</span>
+                            <p className="text-sm text-gray-600">Farmer ID: {item.farmerId}</p>
+                          </div>
                         </div>
                         <span>Ksh {item.price * item.quantity}</span>
                       </div>
